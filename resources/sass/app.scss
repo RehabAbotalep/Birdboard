@@ -1,0 +1,19 @@
+@tailwind preflight;
+
+@import 'themes/light';
+@import 'themes/dark';
+
+@import 'components/button';
+@import 'components/card';
+@import 'components/dropdown';
+
+body,
+button {
+    @apply .text-default;
+}
+
+.section {
+    @apply .px-8;
+}
+
+@tailwind utilities;
