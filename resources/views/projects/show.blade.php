@@ -21,7 +21,7 @@
                     alt="{{ $project->owner->name }}'s avatar"
                     class="rounded-full w-8 mr-2">
 
-                <a href="{{ $project->path().'/edit' }}" class="button ml-4">Edit Project</a>
+                <a href="{{ $project->id.'/edit' }}" class="button ml-4">Edit Project</a>
             </div>
         </div>
     </header>

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Tests\Feature\ActivityFeedTest;
 
 
 class Project extends Model
@@ -32,5 +33,15 @@ class Project extends Model
     public function addTask(string $body)
     {
         return $this->tasks()->create(['body' => $body]);
+    }
+
+    public function recordActivity($description)
+    {
+        $this->activity()->create(compact('description'));
+    }
+
+    public function activity(): HasMany
+    {
+        return $this->hasMany(Activity::class);
     }
 }

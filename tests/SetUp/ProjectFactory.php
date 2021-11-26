@@ -10,7 +10,7 @@ use App\Models\User;
 
 class ProjectFactory
 {
-    private $tasksCount;
+    private $tasksCount = 0;
     private $user;
 
     public function withTasks($count): ProjectFactory

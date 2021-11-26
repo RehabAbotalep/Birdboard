@@ -57,11 +57,27 @@ class ManageProjectTest extends TestCase
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
+            ->patch($project->path(), $attributes = [
+                'title' => 'changed',
+                'notes' => 'updated',
+                'description' => 'changed'
+            ])
+            ->assertRedirect($project->path());
+        $this->get($project->path(). '/edit')->assertOk();
+
+        $this->assertDatabaseHas('projects', $attributes);
+
+    }
+
+    public function testAUserCanUpdateProjectGeneralNotes()
+    {
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
             ->patch($project->path(), $attributes = ['notes' => 'updated'])
             ->assertRedirect($project->path());
 
         $this->assertDatabaseHas('projects', $attributes);
-
     }
 
     public function testOnlyTheOwnerOfTheProjectMayUpdateIt()

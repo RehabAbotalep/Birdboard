@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Project;
+
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Facades\Tests\SetUp\ProjectFactory;
@@ -59,11 +59,43 @@ class ProjectTasksTest extends TestCase
 
         $this->actingAs($project->owner)->patch($project->tasks[0]->path(), [
             'body' => 'changed',
+        ]);
+        $this->assertDatabaseHas('tasks', [
+            'body' => 'changed',
+        ]);
+    }
+
+    public function testAProjectTaskCanBeCompleted()
+    {
+        $project = ProjectFactory::withTasks(1)->create();
+
+        $this->actingAs($project->owner)->patch($project->tasks[0]->path(), [
+            'body' => 'changed',
             'completed' => true,
         ]);
         $this->assertDatabaseHas('tasks', [
             'body' => 'changed',
             'completed' => true,
+        ]);
+    }
+
+    public function testAProjectTaskCanBeMarkedAsInCompleted()
+    {
+        $project = ProjectFactory::withTasks(1)->create();
+
+        $this->actingAs($project->owner)->patch($project->tasks[0]->path(), [
+            'body' => 'changed',
+            'completed' => true,
+        ]);
+
+        $this->actingAs($project->owner)->patch($project->tasks[0]->path(), [
+            'body' => 'changed',
+            'completed' => false,
+        ]);
+
+        $this->assertDatabaseHas('tasks', [
+            'body' => 'changed',
+            'completed' => false,
         ]);
     }
 
