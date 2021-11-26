@@ -1,1 +1,1 @@
-{{ $activity->user->name }} created "{{ $activity->subject->body }}"
+{{ $activity->descriptio }}  created "{{ $activity->subject->body }} "

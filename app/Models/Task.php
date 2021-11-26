@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Task extends Model
 {
@@ -31,12 +33,25 @@ class Task extends Model
     public function complete()
     {
         $this->update(['completed' => true]);
-        $this->project->recordActivity('completed-task');
+        $this->recordActivity('completed_task');
     }
 
     public function incomplete()
     {
         $this->update(['completed' => false]);
-        $this->project->recordActivity('incompleted-task');
+        $this->recordActivity('incompleted_task');
+    }
+
+    public function recordActivity($description)
+    {
+        $this->activity()->create([
+            'description' => $description,
+            'project_id' => $this->project_id
+        ]);
+    }
+
+    public function activity(): MorphMany
+    {
+        return $this->morphMany(Activity::class, 'subject')->latest();
     }
 }

@@ -1,1 +1,1 @@
-{{ $activity->user->name }} incompleted "{{ $activity->subject->body }}"
+{{ $activity->descriptio }}  incompleted "{{ $activity->subject->body }} "
