@@ -2,21 +2,20 @@
 
 namespace App\Models;
 
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Arr;
+
 
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, RecordsActivity;
 
     protected $fillable = ['title', 'description', 'notes'];
 
-
-    public $old = [];
 
     public function path(): string
     {
@@ -36,25 +35,6 @@ class Project extends Model
     public function addTask(string $body)
     {
         return $this->tasks()->create(['body' => $body]);
-    }
-
-    public function recordActivity($description)
-    {
-        $this->activity()->create([
-            'description' => $description,
-            'changes' =>  $this->activityChanges($description)
-        ]);
-    }
-
-    public function activityChanges($description): ?array
-    {
-        if($description != 'updated_project'){
-            return null;
-        }
-        return [
-            'before' => Arr::except(array_diff($this->old, $this->getAttributes()), 'updated_at'),
-            'after' =>  Arr::except($this->getChanges(), 'updated_at')
-        ];
     }
 
     public function activity(): HasMany

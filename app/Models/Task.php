@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory, RecordsActivity;
 
     protected $fillable = ['body', 'project_id', 'completed'];
 
@@ -19,6 +20,8 @@ class Task extends Model
     protected $casts = [
         'completed' => 'boolean'
     ];
+
+    public static $recordableEvents = ['created', 'deleted'];
 
     public function project(): BelongsTo
     {
@@ -42,16 +45,4 @@ class Task extends Model
         $this->recordActivity('incompleted_task');
     }
 
-    public function recordActivity($description)
-    {
-        $this->activity()->create([
-            'description' => $description,
-            'project_id' => $this->project_id
-        ]);
-    }
-
-    public function activity(): MorphMany
-    {
-        return $this->morphMany(Activity::class, 'subject')->latest();
-    }
 }
