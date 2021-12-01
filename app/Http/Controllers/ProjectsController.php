@@ -47,6 +47,14 @@ class ProjectsController extends Controller
 
     }
 
+    public function destroy(Project $project)
+    {
+        $this->authorize('manage', $project);
+
+        $project->delete();
+        return redirect('/projects');
+    }
+
     /**
      * @return array
      */

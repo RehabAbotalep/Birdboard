@@ -32,9 +32,9 @@ trait RecordsActivity
     public static function recordableEvents(): array
     {
         if (isset(static::$recordableEvents)) {
-            return $recordableEvents = static::$recordableEvents;
+            return static::$recordableEvents;
         }
-        return ['created', 'updated', 'deleted'];
+        return ['created', 'updated'];
 
     }
 
@@ -51,11 +51,13 @@ trait RecordsActivity
     public function recordActivity($description)
     {
         $this->activity()->create([
+            'user_id' => ($this->project ?? $this)->owner->id,
             'description' => $description,
             'changes' =>  $this->activityChanges(),
             'project_id' => class_basename($this) === 'Project' ? $this->id : $this->project_id
         ]);
     }
+
 
     public function activity(): MorphMany
     {

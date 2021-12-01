@@ -15,7 +15,7 @@ class ProjectTest extends TestCase
     public function testItHasAPath()
     {
         $project = Project::factory()->create();
-        $this->assertEquals('projects/' . $project->id, $project->path());
+        $this->assertEquals('/projects/' . $project->id, $project->path());
     }
 
     public function testItBelongsToAnOwner()

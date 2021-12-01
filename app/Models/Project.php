@@ -19,7 +19,7 @@ class Project extends Model
 
     public function path(): string
     {
-        return "projects/{$this->id}";
+        return "/projects/{$this->id}";
     }
 
     public function owner(): BelongsTo

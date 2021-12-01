@@ -1,1 +1,1 @@
-{{ $activity->descriptio }} completed "{{ $activity->descriptio }} "
+{{$activity->user->name}} completed "{{ $activity->descriptio }} "

@@ -8,7 +8,7 @@
 
         <form
                 method="POST"
-                action="{{ route('project.update', $project->id) }}"
+                action="{{ route('projects.update', $project->id) }}"
         >
             @method('PATCH')
 
