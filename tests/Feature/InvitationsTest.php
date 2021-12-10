@@ -12,7 +12,41 @@ class InvitationsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testAProjectCanInviteUsers()
+    public function testNonOwnersMayNotInviteUsers()
+    {
+        $this->actingAs(User::factory()->create())
+            ->post(ProjectFactory::create()->path().'/invitations')
+            ->assertForbidden();
+    }
+
+    public function testAProjectOwnerCanInviteUsers()
+    {
+        $project = ProjectFactory::create();
+
+        $userToInvite = User::factory()->create();
+
+        $this->actingAs($project->owner)
+            ->post($project->path().'/invitations', [
+                'email' => $userToInvite->email
+            ])
+            ->assertRedirect($project->path());
+        $this->assertTrue($project->members->contains($userToInvite));
+    }
+
+    public function testTheEmailAddressMustBeAssociatedWithAValidBirdBoardAccount()
+    {
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
+            ->post($project->path(). '/invitations',[
+                'email' => 'notauser@email.com'
+            ])
+            ->assertSessionHasErrors([
+                'email' => 'The user you are inviting must have a Birdboard account.'
+            ]);
+    }
+
+    public function testInvitedUsersMayUpdateProjectDetails()
     {
         $project = ProjectFactory::create();
         $project->invite($newUser = User::factory()->create());

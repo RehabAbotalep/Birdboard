@@ -9,12 +9,12 @@
             </p>
 
             <div class="flex items-center">
-{{--                @foreach ($project->members as $member)--}}
-{{--                    <img--}}
-{{--                        src="{{ gravatar_url($member->email) }}"--}}
-{{--                        alt="{{ $member->name }}'s avatar"--}}
-{{--                        class="rounded-full w-8 mr-2">--}}
-{{--                @endforeach--}}
+                @foreach ($project->members as $member)
+                    <img
+                        src="{{ gravatar_url($member->email) }}"
+                        alt="{{ $member->name }}'s avatar"
+                        class="rounded-full w-8 mr-2">
+                @endforeach
 
                 <img
                     src="{{ gravatar_url($project->owner->email) }}"
