@@ -49,12 +49,15 @@ class ManageProjectTest extends TestCase
         $this->signIn();
 
         $attributes = Project::factory()->raw();
+
         $attributes['tasks'] = [
-            ['body' => 'task1'],
-            ['body' => 'task2'],
+            ['body' => 'Task 1'],
+            ['body' => 'Task 2']
         ];
-        $this->post('projects', $attributes);
-        $this->assertCount(2, Project::first()->tasks);
+
+        $this->post('/projects', $attributes);
+
+        $this->assertDatabaseCount('tasks', 2);
     }
 
     public function testAUserCanSeeAllProjectTheyHaveBeenInvitedTo()
