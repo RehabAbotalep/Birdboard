@@ -6,6 +6,7 @@ use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
@@ -32,7 +33,7 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function addTask(string $body)
+    public function addTask(string $body): Model
     {
         return $this->tasks()->create(['body' => $body]);
     }
@@ -40,5 +41,16 @@ class Project extends Model
     public function activity(): HasMany
     {
         return $this->hasMany(Activity::class)->latest();
+    }
+
+    public function invite(User $user)
+    {
+        $this->members()->attach($user);
+    }
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_members')
+            ->withTimestamps();
     }
 }
