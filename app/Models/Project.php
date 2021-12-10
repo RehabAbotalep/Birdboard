@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\RecordsActivity;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,6 +32,11 @@ class Project extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function addTasks($tasks): Collection
+    {
+        return $this->tasks()->createMany($tasks);
     }
 
     public function addTask(string $body): Model

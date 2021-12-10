@@ -19,10 +19,18 @@ class ProjectsController extends Controller
         return view('projects.create');
     }
 
-    public function store(): RedirectResponse
+    public function store()
     {
         $project = auth()->user()->projects()
             ->create($this->validateRequest());
+
+        if($tasks = request('tasks')){
+            $project->addTasks($tasks);
+        }
+
+        if (request()->wantsJson()) {
+            return ['message' => $project->path()];
+        }
 
         return redirect($project->path());
     }
