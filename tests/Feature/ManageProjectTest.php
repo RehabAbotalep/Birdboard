@@ -32,21 +32,13 @@ class ManageProjectTest extends TestCase
         $this->get('projects')->assertRedirect('/login');
     }
 
-    public function testAUserCanAddAProject()
+    public function testAUserCanCreateAProject()
     {
         $this->signIn();
-        $attributes = [
-            'title' => $this->faker->sentence,
-            'description' => $this->faker->sentence,
-            'notes' => 'general notes'
-        ];
-        $response = $this->post('projects', $attributes);
+        $this->get('projects/create')->assertOk();
 
-        $project = Project::where($attributes)->first();
-
-        $response->assertRedirect($project->path());
-
-        $this->get($project->path())
+        $this->followingRedirects()
+            ->post('projects', $attributes = Project::factory()->raw())
             ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
             ->assertSee($attributes['notes']);
@@ -64,8 +56,12 @@ class ManageProjectTest extends TestCase
         $project = ProjectFactory::create();
         $this->delete($project->path())->assertRedirect('login');
 
-        $this->signIn();
-        $this->delete($project->path())->assertForbidden();
+        $user = $this->signIn();
+        $this->actingAs($user)->delete($project->path())->assertForbidden();
+
+        $project->invite($user);
+        $this->actingAs($user)->delete($project->path())->assertForbidden();
+
     }
 
     public function testAUserCanDeleteAProject()
