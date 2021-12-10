@@ -10,7 +10,7 @@ class ProjectTasksController extends Controller
 {
     public function store(Project $project)
     {
-        $this->authorize('manage', $project);
+        $this->authorize('update', $project);
         request()->validate(['body' => 'required']);
 
         $project->addTask(request('body'));
@@ -19,7 +19,7 @@ class ProjectTasksController extends Controller
 
     public function update(Project $project, Task $task)
     {
-        $this->authorize('manage', $task->project);
+        $this->authorize('update', $task->project);
 
         $task->update(request()->validate(['body' => 'required']));
         request('completed') ? $task->complete() : $task->incomplete();
